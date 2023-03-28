@@ -8,7 +8,8 @@ De início o projeto consome a API do IMDB. Consumindo alguns web-services, como
 ## :hammer: Funcionalidades do projeto
 
 - `Funcionalidade 1`: `Consumir uma API de filmes`:
-- Extrair dados do JSON obtido e mostrá-los formatados (cores, emojis, etc) no console.
+
+Extrair dados do JSON obtido e mostrá-los formatados (cores, emojis, etc) no console.
 ![Funcionalidade 1](docs/images/java-console.gif)
 - `Funcionalidade 2`: `Gerar figurinhas para o WhatsApp`: *em construção*
 
