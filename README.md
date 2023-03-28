@@ -1,7 +1,7 @@
 # Projeto Alura Imersão Java
 
 Projeto em andamento, visando a prática com a linguagem Java e os conceitos do paradigma de orientação a objetos.
-De início o projeto consome a API do IMDB. Consumindo alguns web-services, como: Top250 Movies, Top Series, além de filmes e séries mais populares. 
+De início o projeto consome a API do IMDB. Consumindo alguns web-services, como: Top250 Movies, Top Series, além de filmes e séries mais populares. Agora o projeto é capaz de gerar stickers para WhatsApp.
 
 :construction: Projeto em construção :construction:
 
@@ -10,8 +10,12 @@ De início o projeto consome a API do IMDB. Consumindo alguns web-services, como
 - `Funcionalidade 1`: `Consumir uma API de filmes`:
 
 Extrair dados do JSON obtido e mostrá-los formatados (cores, emojis, etc) no console.
-![Funcionalidade 1](docs/images/java-console.gif)
-- `Funcionalidade 2`: `Gerar figurinhas para o WhatsApp`: *em construção*
+![Funcionalidade 1](docs/images/gifs/java-console.gif)
+
+- `Funcionalidade 2`: `Gerar figurinhas para o WhatsApp`:
+
+Gera imagens personalizadas em formato PNG através do pôster dos Top Filmes do IMDB. E também gera um texto sobre a imagem do pôster baseado na nota do filme.
+![Funcionalidade 2](docs/images/gifs/java-console-figs.gif)
 
 ## ✔️ Tecnologias utilizadas
 - `Java 17`
