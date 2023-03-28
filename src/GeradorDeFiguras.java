@@ -1,7 +1,16 @@
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.awt.Transparency;
+import java.awt.font.FontRenderContext;
+import java.awt.font.GlyphVector;
+import java.awt.font.TextLayout;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -11,7 +20,7 @@ import javax.imageio.ImageIO;
 
 public class GeradorDeFiguras {
     
-    public void criar(InputStream inputStream, String nomeArquivo) throws IOException {
+    public void criar(InputStream inputStream, String nomeArquivo) throws IOException, FontFormatException {
         // leitura da imagem
 
         // InputStream inputStream =
@@ -33,13 +42,39 @@ public class GeradorDeFiguras {
         g.drawImage(imagemOriginal, 0, 0, null);
         
         // definir fonte
-        var fonte = new Font(Font.SERIF, Font.CENTER_BASELINE, 70);
+        var fonte = new Font("Impact", Font.PLAIN, 70);
+        
         g.setColor(Color.YELLOW);
         g.setFont(fonte);
         
         // escrever uma frase na nova imagem
-        g.drawString("FINO SENHORES", 100, novaAltura - 100);
-        
+        String texto = "FINO SENHORES";
+
+        FontMetrics fontMetrics = g.getFontMetrics();
+        Rectangle2D retangulo = fontMetrics.getStringBounds(texto, g);
+
+        int textoWidth = (int) retangulo.getWidth();
+        int posicaoTextoX = (largura - textoWidth) / 2;
+        int posicaoTextoY = novaAltura - 100;
+
+        g.drawString(texto, posicaoTextoX, posicaoTextoY);
+
+        /// definindo o contorno para o texto
+        FontRenderContext fontRenderContext = g.getFontRenderContext();
+        var textoLayout = new TextLayout(texto, fonte, fontRenderContext);
+        Shape outline = textoLayout.getOutline(null);
+        AffineTransform transform = g.getTransform();
+
+        transform.translate(posicaoTextoX, posicaoTextoY);
+        g.setTransform(transform);
+
+        var outlineStroke = new BasicStroke(largura * 0.004f);
+        g.setStroke(outlineStroke);
+
+        g.setColor(Color.BLACK);
+        g.draw(outline);
+        g.setClip(outline);
+
         // escrever a nova imagem em arquivo
         File path = new File("saida/stickers/" + nomeArquivo);
         boolean pathValido = path.mkdirs();
@@ -48,6 +83,8 @@ public class GeradorDeFiguras {
             ImageIO.write(novaImagem, "png", path);
         }
         
+        ImageIO.write(novaImagem, "png", path);
+
         inputStream.close(); 
     }
     

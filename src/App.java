@@ -1,3 +1,4 @@
+import java.awt.FontFormatException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -18,7 +19,7 @@ public class App {
     static final String AZUL = "\u001b[44m";
     static final String VERDE = "\u001b[42m";
     
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException, InterruptedException, FontFormatException {
         Scanner scanner  = new Scanner(System.in);
         
         String urlTopMovies = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/TopMovies.json";
@@ -81,7 +82,7 @@ public class App {
         Escolha uma opção:  """);
     }
 
-    private static void gerarFiguras(List<Map<String, String>> lista) throws IOException {
+    private static void gerarFiguras(List<Map<String, String>> lista) throws IOException, FontFormatException {
         
         for (Map<String, String> filme : lista) {
             String url = filme.get("image");
@@ -99,7 +100,7 @@ public class App {
 
     }
 
-    private static void mostrarResultados(int opcao, List<String> listaUrl) throws IOException, InterruptedException {
+    private static void mostrarResultados(int opcao, List<String> listaUrl) throws IOException, InterruptedException, FontFormatException {
         switch (opcao) {
             case 1:
                 System.out.println(MAGENTA + "\n-- TOP FILMES -----------\n" + FORMAT_RESET);
