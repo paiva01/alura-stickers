@@ -1,13 +1,11 @@
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.FontFormatException;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.Transparency;
 import java.awt.font.FontRenderContext;
-import java.awt.font.GlyphVector;
 import java.awt.font.TextLayout;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
@@ -20,7 +18,7 @@ import javax.imageio.ImageIO;
 
 public class GeradorDeFiguras {
     
-    public void criar(InputStream inputStream, String nomeArquivo) throws IOException, FontFormatException {
+    public void criar(InputStream inputStream, String nomeArquivo, String textoSticker) throws IOException {
         // leitura da imagem
 
         // InputStream inputStream =
@@ -48,7 +46,7 @@ public class GeradorDeFiguras {
         g.setFont(fonte);
         
         // escrever uma frase na nova imagem
-        String texto = "FINO SENHORES";
+        String texto = textoSticker;
 
         FontMetrics fontMetrics = g.getFontMetrics();
         Rectangle2D retangulo = fontMetrics.getStringBounds(texto, g);

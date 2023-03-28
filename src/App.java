@@ -87,12 +87,23 @@ public class App {
         for (Map<String, String> filme : lista) {
             String url = filme.get("image");
             String titulo = filme.get("title");
-
+            String textoCustom;
+            
+            double notaFilme = Double.parseDouble(filme.get("imDbRating"));
+            
+            if (notaFilme > 9) {
+                textoCustom = "FINO SENHHORES";
+            } else if (notaFilme >= 7 && notaFilme <= 9 ) {
+                textoCustom = "BRABO";
+            } else {
+                textoCustom = "TOPZERA";
+            }
+            
             InputStream inputStream = new URL(url).openStream();
             String nomeArquivo = titulo.replace(": ", " – ") + ".png";
 
             var gerador = new GeradorDeFiguras();
-            gerador.criar(inputStream, nomeArquivo);
+            gerador.criar(inputStream, nomeArquivo, textoCustom);
             
             System.out.println("Gerando figurinha de " + titulo);
             System.out.println();
