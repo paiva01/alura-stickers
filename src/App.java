@@ -82,7 +82,7 @@ public class App {
         Escolha uma opção:  """);
     }
 
-    private static void gerarFiguras(List<Map<String, String>> lista) throws IOException, FontFormatException {
+    private static void gerarFiguras(List<Map<String, String>> lista) throws IOException {
         
         for (Map<String, String> filme : lista) {
             String url = filme.get("image");
