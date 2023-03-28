@@ -1,5 +1,7 @@
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
+import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -13,6 +15,8 @@ public class App {
 
     static final String FORMAT_RESET = "\u001b[0m";
     static final String MAGENTA = "\u001b[45m";
+    static final String AZUL = "\u001b[44m";
+    static final String VERDE = "\u001b[42m";
     
     public static void main(String[] args) throws IOException, InterruptedException {
         Scanner scanner  = new Scanner(System.in);
@@ -72,8 +76,27 @@ public class App {
         2. Mostrar os Filmes mais populares.
         3. Mostrar as Top Séries.
         4. Mostrar as Séries mais populares.
+        5. Gerar figurinhas dos Top Filmes.
         -------------------------------------------
         Escolha uma opção:  """);
+    }
+
+    private static void gerarFiguras(List<Map<String, String>> lista) throws IOException {
+        
+        for (Map<String, String> filme : lista) {
+            String url = filme.get("image");
+            String titulo = filme.get("title");
+
+            InputStream inputStream = new URL(url).openStream();
+            String nomeArquivo = titulo.replace(": ", " – ") + ".png";
+
+            var gerador = new GeradorDeFiguras();
+            gerador.criar(inputStream, nomeArquivo);
+            
+            System.out.println("Gerando figurinha de " + titulo);
+            System.out.println();
+        }
+
     }
 
     private static void mostrarResultados(int opcao, List<String> listaUrl) throws IOException, InterruptedException {
@@ -93,6 +116,12 @@ public class App {
             case 4:
                 System.out.println(MAGENTA + "\n-- SÉRIES POPULARES -----------\n" + FORMAT_RESET);
                 exibirDados(consumir(listaUrl.get(3)));
+                break;
+            case 5:
+                System.out.println(AZUL + "\nGerando figurinhas ...\n" + FORMAT_RESET);
+                gerarFiguras(consumir(listaUrl.get(0)));
+                System.out.println(VERDE + "Figurinhas criadas com sucesso!" + FORMAT_RESET);
+
                 break;
             default:
                 break;
