@@ -85,21 +85,24 @@ public class App {
     private static void gerarFiguras(List<Map<String, String>> lista) throws IOException {
         
         for (Map<String, String> filme : lista) {
-            String url = filme.get("image");
+            String urlImagem = filme.get("image");
+            String urlImagemHD = urlImagem.replaceFirst("(@?\\.)([0-9A-Z,_]+).jpg$"
+                , "$1.jpg");
+
             String titulo = filme.get("title");
             String textoCustom;
             
             double notaFilme = Double.parseDouble(filme.get("imDbRating"));
             
-            if (notaFilme > 9) {
+            if (notaFilme > 8) {
                 textoCustom = "FINO SENHHORES";
-            } else if (notaFilme >= 7 && notaFilme <= 9 ) {
+            } else if (notaFilme >= 6.5 && notaFilme <= 8 ) {
                 textoCustom = "BRABO";
             } else {
                 textoCustom = "TOPZERA";
             }
             
-            InputStream inputStream = new URL(url).openStream();
+            InputStream inputStream = new URL(urlImagemHD).openStream();
             String nomeArquivo = titulo.replace(": ", " – ") + ".png";
 
             var gerador = new GeradorDeFiguras();
