@@ -9,6 +9,7 @@ public class App {
     static final String MAGENTA = "\u001b[45m";
     static final String AZUL = "\u001b[44m";
     static final String VERDE = "\u001b[42m";
+    static final String VERMELHO = "\u001b[41m";
 
     public static void main(String[] args) throws IOException, InterruptedException, FontFormatException {
         Scanner scanner = new Scanner(System.in);
@@ -135,6 +136,14 @@ public class App {
                 exibirDados(json, extrator);
 
                 break;
+            case 0:
+                System.out.println(VERMELHO + "\nEncerrando..." + FORMAT_RESET);
+                Thread.sleep(2000);
+                System.out.println(AZUL + "\nPrograma finalizado." + FORMAT_RESET);
+                
+                System.exit(0);
+                
+                break;   
             default:
                 break;
         }
@@ -144,7 +153,7 @@ public class App {
     private static void mostrarMenu() {
         System.out.print("""
                                 [ MENU ]
-                -------------------------------------------
+                ------------------------------------------
                 1. Mostrar os Top Filmes
                 2. Mostrar os Filmes mais populares.
                 3. Mostrar as Top Séries.
@@ -152,7 +161,9 @@ public class App {
                 5. Gerar figurinhas dos Top Filmes.
                                 ---
                 6. Imagens Astronômicas da Semana.
-                -------------------------------------------
+                ------------------------------------------
+                0. Para encerrar o programa.
+                ------------------------------------------
                 Escolha uma opção:  """);
     }
 }
