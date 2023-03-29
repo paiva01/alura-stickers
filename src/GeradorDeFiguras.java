@@ -11,14 +11,17 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
 public class GeradorDeFiguras {
     
-    public void criar(InputStream inputStream,
+    private void criar(InputStream inputStream,
         String nomeArquivo, String textoSticker, InputStream inputStreamSobreposicao) throws IOException {
         // leitura da imagem
 
@@ -90,5 +93,37 @@ public class GeradorDeFiguras {
 
         inputStream.close(); 
     }
-    
+
+    public void gerarFiguras(List<Conteudo> conteudos) throws IOException {
+
+        for (Conteudo conteudo : conteudos) {
+            String urlImagem = conteudo.getUrlImagem();
+            String urlImagemHD = urlImagem.replaceFirst("(@?\\.)([0-9A-Z,_]+).jpg$", "$1.jpg");
+
+            String titulo = conteudo.getTitulo();
+            String textoCustom;
+            InputStream imgDean;
+
+            double nota = Double.parseDouble(conteudo.getNota());
+
+            if (nota > 8) {
+                textoCustom = "FINO SENHORES";
+                imgDean = new FileInputStream(new File("sobreposicao/dean-contente.png"));
+            } else if (nota >= 6.5 && nota <= 8) {
+                textoCustom = "BRABO";
+                imgDean = new FileInputStream(new File("sobreposicao/dean-contente.png"));
+            } else {
+                textoCustom = "HMMMMM";
+                imgDean = new FileInputStream(new File("sobreposicao/dean-nao-contente.png"));
+            }
+
+            InputStream inputStream = new URL(urlImagemHD).openStream();
+            String nomeArquivo = titulo.replace(": ", " – ") + ".png";
+
+            this.criar(inputStream, nomeArquivo, textoCustom, imgDean);
+
+            System.out.println("Gerando figurinha de " + titulo);
+            System.out.println();
+        }
+    }
 }

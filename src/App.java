@@ -1,9 +1,5 @@
 import java.awt.FontFormatException;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.List;
 import java.util.Scanner;
 
@@ -23,53 +19,6 @@ public class App {
         scanner.close();
 
         manipularDados(opcao);
-
-    }
-
-    private static void gerarFiguras(List<Conteudo> conteudos) throws IOException {
-
-        for (Conteudo conteudo : conteudos) {
-            String urlImagem = conteudo.getUrlImagem();
-            String urlImagemHD = urlImagem.replaceFirst("(@?\\.)([0-9A-Z,_]+).jpg$", "$1.jpg");
-
-            String titulo = conteudo.getTitulo();
-            String textoCustom;
-            InputStream imgDean;
-
-            double nota = Double.parseDouble(conteudo.getNota());
-
-            if (nota > 8) {
-                textoCustom = "FINO SENHORES";
-                imgDean = new FileInputStream(new File("sobreposicao/dean-contente.png"));
-            } else if (nota >= 6.5 && nota <= 8) {
-                textoCustom = "BRABO";
-                imgDean = new FileInputStream(new File("sobreposicao/dean-contente.png"));
-            } else {
-                textoCustom = "HMMMMM";
-                imgDean = new FileInputStream(new File("sobreposicao/dean-nao-contente.png"));
-            }
-
-            InputStream inputStream = new URL(urlImagemHD).openStream();
-            String nomeArquivo = titulo.replace(": ", " – ") + ".png";
-
-            var gerador = new GeradorDeFiguras();
-            gerador.criar(inputStream, nomeArquivo, textoCustom, imgDean);
-
-            System.out.println("Gerando figurinha de " + titulo);
-            System.out.println();
-        }
-
-        /*var gerador = new GeradorDeFiguras();
-        for (int i = 0; i < conteudos.size(); i++) {
-            InputStream inputStream = new URL(conteudos.get(i).getUrlImagem()).openStream();
-            String nomeArquivo = "saida/" + conteudos.get(i).getTitulo() + ".png";
-    
-            gerador.criar(inputStream, nomeArquivo);
-    
-            System.out.println("Gerando figurinha de " + conteudos.get(i).getTitulo());
-            System.out.println();
-        }*/
-
 
     }
 
@@ -166,7 +115,9 @@ public class App {
 
                 List<Conteudo> conteudos = extrator.extrairDados(json);
 
-                gerarFiguras(conteudos);
+                var gerador = new GeradorDeFiguras();
+
+                gerador.gerarFiguras(conteudos);
 
                 System.out.println(VERDE + "Figurinhas criadas com sucesso!" + FORMAT_RESET);
 
