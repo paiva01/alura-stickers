@@ -28,12 +28,14 @@ public class App {
         String urlMostPopularMovies = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/MostPopularMovies.json";
         String urlTopSeries = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/TopTVs.json";
         String urlMostPopularSeries = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/MostPopularTVs.json";
-        
+        String imagemPlanetariaDoDia = "https://api.nasa.gov/planetary/apod?api_key=gWPNOzHaGbfsekt7y1cf1jKCU9rZCeE9jkUD7U4v&start_date=2023-03-22&end_date=2023-03-29";
+
         List<String> listaEndpoints = new ArrayList<>();
         listaEndpoints.add(urlTopMovies);
         listaEndpoints.add(urlMostPopularMovies);
         listaEndpoints.add(urlTopSeries);
         listaEndpoints.add(urlMostPopularSeries);
+        listaEndpoints.add(imagemPlanetariaDoDia);
 
         mostrarMenu();
 
@@ -80,6 +82,8 @@ public class App {
         3. Mostrar as Top Séries.
         4. Mostrar as Séries mais populares.
         5. Gerar figurinhas dos Top Filmes.
+                        ---
+        6. Imagem Astronômica do Dia.
         -------------------------------------------
         Escolha uma opção:  """);
     }
@@ -120,7 +124,7 @@ public class App {
 
     }
 
-    private static void mostrarResultados(int opcao, List<String> listaUrl) throws IOException, InterruptedException, FontFormatException {
+    private static void mostrarResultados(int opcao, List<String> listaUrl) throws IOException, InterruptedException {
         switch (opcao) {
             case 1:
                 System.out.println(MAGENTA + "\n-- TOP FILMES -----------\n" + FORMAT_RESET);
@@ -144,6 +148,9 @@ public class App {
                 System.out.println(VERDE + "Figurinhas criadas com sucesso!" + FORMAT_RESET);
 
                 break;
+            case 6:
+                exibirDados(consumir(listaUrl.get(4)));
+                break;    
             default:
                 break;
         }
