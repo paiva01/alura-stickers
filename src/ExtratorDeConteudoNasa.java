@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ExtratorDeConteudoNasa {
+public class ExtratorDeConteudoNasa implements ExtratorDeConteudo {
     
     public List<Conteudo> extrairDados(String json) {
         
