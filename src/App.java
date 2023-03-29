@@ -3,12 +3,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.net.URL;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.http.HttpResponse.BodyHandlers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -41,33 +36,39 @@ public class App {
 
         var opcao = scanner.nextInt();
         scanner.close();
-
+        
         mostrarResultados(opcao, listaEndpoints);
 
     }
 
-    private static List<Map<String, String>> buscarDados(String url) throws IOException, InterruptedException {
+    private static List<Conteudo> buscarDados(String url) {
         var http = new ClienteHttp();
         String json = http.consumir(url);
 
-        return JsonParser.parse(json);
+        var extrator = new ExtratorDeConteudoNasa();
+        
+        return extrator.extrairDados(json);
     }
 
-    private static void exibirDados(List<Map<String, String>> lista) {
+    private static void exibirDados(List<Conteudo> conteudos) {
 
-        for (Map<String, String> filme : lista) {
+        for (Conteudo conteudo : conteudos) {
 
-            if (filme.get("rank").equals("1")) {
-                System.out.println("\u001b[33m \u001b[40m \u001b[1m" + "\uD83D\uDC51 " + filme.get("title") + FORMAT_RESET);
-                System.out.println("\u001b[34m \u001b[3m" + filme.get("image") + FORMAT_RESET);
-                System.out.println("\u2B50 \u001b[5m" + filme.get("imDbRating") + FORMAT_RESET);
+            /*if (conteudo.get("rank").equals("1")) {
+                System.out.println("\u001b[33m \u001b[40m \u001b[1m" + "\uD83D\uDC51 " + conteudo.get("title") + FORMAT_RESET);
+                System.out.println("\u001b[34m \u001b[3m" + conteudo.get("image") + FORMAT_RESET);
+                System.out.println("\u2B50 \u001b[5m" + conteudo.get("imDbRating") + FORMAT_RESET);
                 System.out.println();
             } else {
-                System.out.println("\u001b[33m \u001b[40m \u001b[1m" + filme.get("rank") +". "+ filme.get("title") + FORMAT_RESET);
-                System.out.println("\u001b[34m \u001b[3m" + filme.get("image") + FORMAT_RESET);
-                System.out.println("\u2B50 \u001b[5m" + filme.get("imDbRating") + FORMAT_RESET);
+                System.out.println("\u001b[33m \u001b[40m \u001b[1m" + conteudo.get("rank") +". "+ conteudo.get("title") + FORMAT_RESET);
+                System.out.println("\u001b[34m \u001b[3m" + conteudo.get("image") + FORMAT_RESET);
+                System.out.println("\u2B50 \u001b[5m" + conteudo.get("imDbRating") + FORMAT_RESET);
                 System.out.println();
-            }
+            }*/
+            System.out.println("Título: " + conteudo.getTitulo());
+            System.out.println("Imagem: " + conteudo.getUrlImagem());
+            System.out.println();
+
         }
     }
 
@@ -81,7 +82,7 @@ public class App {
         4. Mostrar as Séries mais populares.
         5. Gerar figurinhas dos Top Filmes.
                         ---
-        6. Imagem Astronômica do Dia.
+        6. Imagens Astronômicas da Semana.
         -------------------------------------------
         Escolha uma opção:  """);
     }
@@ -142,11 +143,12 @@ public class App {
                 break;
             case 5:
                 System.out.println(AZUL + "\nGerando figurinhas ...\n" + FORMAT_RESET);
-                gerarFiguras(buscarDados(listaUrl.get(0)));
+                //gerarFiguras(buscarDados(listaUrl.get(0)));
                 System.out.println(VERDE + "Figurinhas criadas com sucesso!" + FORMAT_RESET);
 
                 break;
             case 6:
+                System.out.println(AZUL + "\n-- Imagens da Semana -----\n" +FORMAT_RESET);
                 exibirDados(buscarDados(listaUrl.get(4)));
                 break;    
             default:
