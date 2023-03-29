@@ -46,13 +46,11 @@ public class App {
 
     }
 
-    private static List<Map<String, String>> consumir(String url) throws IOException, InterruptedException {
-        URI endereco = URI.create(url);
-        var client = HttpClient.newHttpClient();
-        var request = HttpRequest.newBuilder(endereco).GET().build();
-        HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+    private static List<Map<String, String>> buscarDados(String url) throws IOException, InterruptedException {
+        var http = new ClienteHttp();
+        String json = http.consumir(url);
 
-        return JsonParser.parse(response.body());
+        return JsonParser.parse(json);
     }
 
     private static void exibirDados(List<Map<String, String>> lista) {
@@ -128,28 +126,28 @@ public class App {
         switch (opcao) {
             case 1:
                 System.out.println(MAGENTA + "\n-- TOP FILMES -----------\n" + FORMAT_RESET);
-                exibirDados(consumir(listaUrl.get(0)));
+                exibirDados(buscarDados(listaUrl.get(0)));
                 break;
             case 2:
                 System.out.println(MAGENTA + "\n-- FILMES POPULARES -----------\n" + FORMAT_RESET);
-                exibirDados(consumir(listaUrl.get(1)));
+                exibirDados(buscarDados(listaUrl.get(1)));
                 break;
             case 3:
                 System.out.println(MAGENTA + "\n-- TOP SÉRIES -----------\n" + FORMAT_RESET);
-                exibirDados(consumir(listaUrl.get(2)));
+                exibirDados(buscarDados(listaUrl.get(2)));
                 break;
             case 4:
                 System.out.println(MAGENTA + "\n-- SÉRIES POPULARES -----------\n" + FORMAT_RESET);
-                exibirDados(consumir(listaUrl.get(3)));
+                exibirDados(buscarDados(listaUrl.get(3)));
                 break;
             case 5:
                 System.out.println(AZUL + "\nGerando figurinhas ...\n" + FORMAT_RESET);
-                gerarFiguras(consumir(listaUrl.get(0)));
+                gerarFiguras(buscarDados(listaUrl.get(0)));
                 System.out.println(VERDE + "Figurinhas criadas com sucesso!" + FORMAT_RESET);
 
                 break;
             case 6:
-                exibirDados(consumir(listaUrl.get(4)));
+                exibirDados(buscarDados(listaUrl.get(4)));
                 break;    
             default:
                 break;
