@@ -18,7 +18,8 @@ import javax.imageio.ImageIO;
 
 public class GeradorDeFiguras {
     
-    public void criar(InputStream inputStream, String nomeArquivo, String textoSticker) throws IOException {
+    public void criar(InputStream inputStream,
+        String nomeArquivo, String textoSticker, InputStream inputStreamSobreposicao) throws IOException {
         // leitura da imagem
 
         // InputStream inputStream =
@@ -38,7 +39,11 @@ public class GeradorDeFiguras {
         // copiar a imagem original pra nova imagem (em memória)
         Graphics2D g = (Graphics2D) novaImagem.getGraphics();
         g.drawImage(imagemOriginal, 0, 0, null);
-        
+
+        BufferedImage imgSobreposicao = ImageIO.read(inputStreamSobreposicao);
+        int posicaoImgSobreposicaoY = novaAltura - imgSobreposicao.getHeight();
+        g.drawImage(imgSobreposicao, 0, posicaoImgSobreposicaoY, null);
+
         // definir fonte
         var fonte = new Font("Impact", Font.PLAIN, 70);
         

@@ -1,4 +1,6 @@
 import java.awt.FontFormatException;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -91,22 +93,26 @@ public class App {
 
             String titulo = filme.get("title");
             String textoCustom;
-            
+            InputStream imgDean;
+
             double notaFilme = Double.parseDouble(filme.get("imDbRating"));
             
             if (notaFilme > 8) {
-                textoCustom = "FINO SENHHORES";
+                textoCustom = "FINO SENHORES";
+                imgDean = new FileInputStream(new File("sobreposicao/dean-contente.png"));
             } else if (notaFilme >= 6.5 && notaFilme <= 8 ) {
                 textoCustom = "BRABO";
+                imgDean = new FileInputStream(new File("sobreposicao/dean-contente.png"));
             } else {
-                textoCustom = "TOPZERA";
+                textoCustom = "HMMMMM";
+                imgDean = new FileInputStream(new File("sobreposicao/dean-nao-contente.png"));
             }
             
             InputStream inputStream = new URL(urlImagemHD).openStream();
             String nomeArquivo = titulo.replace(": ", " – ") + ".png";
 
             var gerador = new GeradorDeFiguras();
-            gerador.criar(inputStream, nomeArquivo, textoCustom);
+            gerador.criar(inputStream, nomeArquivo, textoCustom, imgDean);
             
             System.out.println("Gerando figurinha de " + titulo);
             System.out.println();
