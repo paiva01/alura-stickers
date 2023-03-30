@@ -8,7 +8,7 @@ public enum API {
         new ExtratorDeConteudoImdb()),
     IMDB_POP_SERIES("https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/MostPopularTVs.json",
         new ExtratorDeConteudoImdb()),
-    NASA("https://api.nasa.gov/planetary/apod?api_key=gWPNOzHaGbfsekt7y1cf1jKCU9rZCeE9jkUD7U4v&start_date=2023-03-22&end_date=2023-03-29",
+    NASA("https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&start_date=2023-03-30&end_date=2023-03-30",
         new ExtratorDeConteudoNasa());
 
     private String url;

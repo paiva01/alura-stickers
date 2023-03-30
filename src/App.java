@@ -118,7 +118,7 @@ public class App {
 
                 var gerador = new GeradorDeFiguras();
 
-                gerador.gerarFiguras(conteudos);
+                gerador.gerarFiguras(conteudos, extrator);
 
                 System.out.println(VERDE + "Figurinhas criadas com sucesso!" + FORMAT_RESET);
 
@@ -136,6 +136,24 @@ public class App {
                 exibirDados(json, extrator);
 
                 break;
+            case 7:
+                System.out.println(AZUL + "\nSalvando imagem ...\n" + FORMAT_RESET);
+
+                api = API.NASA;
+                url = api.getUrl();
+                extrator = api.getExtrator();
+
+                http = new ClienteHttp();
+                json = http.consumir(url);
+
+                conteudos = extrator.extrairDados(json);
+
+                gerador = new GeradorDeFiguras();
+
+                gerador.gerarFiguras(conteudos, extrator);
+
+                System.out.println(VERDE + "Imagem salva com sucesso!" + FORMAT_RESET);
+                break;
             case 0:
                 System.out.println(VERMELHO + "\nEncerrando..." + FORMAT_RESET);
                 Thread.sleep(2000);
@@ -143,7 +161,7 @@ public class App {
                 
                 System.exit(0);
                 
-                break;   
+                break;       
             default:
                 break;
         }
@@ -161,6 +179,7 @@ public class App {
                 5. Gerar figurinhas dos Top Filmes.
                                 ---
                 6. Imagens Astronômicas da Semana.
+                7. Salvar imagem Astronômica do dia
                 ------------------------------------------
                 0. Para encerrar o programa.
                 ------------------------------------------

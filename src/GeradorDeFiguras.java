@@ -94,36 +94,80 @@ public class GeradorDeFiguras {
         inputStream.close(); 
     }
 
-    public void gerarFiguras(List<Conteudo> conteudos) throws IOException {
+    public void gerarFiguras(List<Conteudo> conteudos, ExtratorDeConteudo extrator) throws IOException {
 
-        for (Conteudo conteudo : conteudos) {
-            String urlImagem = conteudo.getUrlImagem();
-            String urlImagemHD = urlImagem.replaceFirst("(@?\\.)([0-9A-Z,_]+).jpg$", "$1.jpg");
-
-            String titulo = conteudo.getTitulo();
-            String textoCustom;
-            InputStream imgDean;
-
-            double nota = Double.parseDouble(conteudo.getNota());
-
-            if (nota > 8) {
-                textoCustom = "FINO SENHORES";
-                imgDean = new FileInputStream(new File("sobreposicao/dean-contente.png"));
-            } else if (nota >= 6.5 && nota <= 8) {
-                textoCustom = "BRABO";
-                imgDean = new FileInputStream(new File("sobreposicao/dean-contente.png"));
-            } else {
-                textoCustom = "HMMMMM";
-                imgDean = new FileInputStream(new File("sobreposicao/dean-nao-contente.png"));
+        if (extrator instanceof ExtratorDeConteudoImdb) {
+            for (Conteudo conteudo : conteudos) {
+                String urlImagem = conteudo.getUrlImagem();
+                String urlImagemHD = urlImagem.replaceFirst("(@?\\.)([0-9A-Z,_]+).jpg$", "$1.jpg");
+    
+                String titulo = conteudo.getTitulo();
+                String textoCustom;
+                InputStream imgDean;
+    
+                double nota = Double.parseDouble(conteudo.getNota());
+    
+                if (nota > 8) {
+                    textoCustom = "FINO SENHORES";
+                    imgDean = new FileInputStream(new File("sobreposicao/dean-contente.png"));
+                } else if (nota >= 6.5 && nota <= 8) {
+                    textoCustom = "BRABO";
+                    imgDean = new FileInputStream(new File("sobreposicao/dean-contente.png"));
+                } else {
+                    textoCustom = "HMMMMM";
+                    imgDean = new FileInputStream(new File("sobreposicao/dean-nao-contente.png"));
+                }
+    
+                InputStream inputStream = new URL(urlImagemHD).openStream();
+                String nomeArquivo = titulo.replace(": ", " – ") + ".png";
+    
+                this.criar(inputStream, nomeArquivo, textoCustom, imgDean);
+    
+                System.out.println("Gerando figurinha de " + titulo);
+                System.out.println();
             }
 
-            InputStream inputStream = new URL(urlImagemHD).openStream();
-            String nomeArquivo = titulo.replace(": ", " – ") + ".png";
+        } else if (extrator instanceof ExtratorDeConteudoNasa) {
+            String tituloTexto;
 
-            this.criar(inputStream, nomeArquivo, textoCustom, imgDean);
+            for (int i = 0; i < conteudos.size(); i++) {
+                InputStream inputStream = new URL(conteudos.get(i).getUrlImagem())
+                    .openStream();
 
-            System.out.println("Gerando figurinha de " + titulo);
-            System.out.println();
+                String nomeArquivo = "saida/stickers/" + conteudos.get(i).getTitulo() + ".png";
+                tituloTexto = conteudos.get(i).getTitulo();
+
+                this.criar(inputStream, nomeArquivo, tituloTexto);
+
+                System.out.println();
+            }
         }
+    }
+
+    private void criar(InputStream inputStream, String nomeArquivo, String tituloTexto) throws IOException {
+        BufferedImage imagemOriginal = ImageIO.read(inputStream);
+
+        int largura = imagemOriginal.getWidth();
+        int altura = imagemOriginal.getHeight();
+        int novaAltura = altura + 200;
+        BufferedImage novaImagem = new BufferedImage(largura, novaAltura, Transparency.TRANSLUCENT);
+
+        Graphics2D graphics = (Graphics2D) novaImagem.getGraphics();
+        graphics.drawImage(imagemOriginal, 0, 0, null);
+
+        var fonte = new Font(Font.SANS_SERIF, Font.BOLD, 64);
+        graphics.setColor(Color.YELLOW);
+        graphics.setFont(fonte);
+
+        graphics.drawString(tituloTexto, 100, novaAltura - 100);
+        
+        File path = new File("saida/stickers/" + nomeArquivo);
+        boolean pathValido = path.mkdirs();
+
+        if (pathValido) {
+            ImageIO.write(novaImagem, "png", path);
+        }
+
+        ImageIO.write(novaImagem, "png", path);
     }
 }
