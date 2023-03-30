@@ -21,14 +21,12 @@ import javax.imageio.ImageIO;
 
 public class GeradorDeFiguras {
     
+    private static final String DIR_STICKERS = "saida/stickers/";
+
     private void criar(InputStream inputStream,
         String nomeArquivo, String textoSticker, InputStream inputStreamSobreposicao) throws IOException {
         // leitura da imagem
 
-        // InputStream inputStream =
-        //    new URL("https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/TopMovies_1.jpg")
-        //    .openStream();
-        
         BufferedImage imagemOriginal = ImageIO.read(inputStream);
             
         // cria nova imagem em memoria com transparência e com tamanho novo
@@ -82,7 +80,7 @@ public class GeradorDeFiguras {
         g.setClip(outline);
 
         // escrever a nova imagem em arquivo
-        File path = new File("saida/stickers/" + nomeArquivo);
+        File path = new File(DIR_STICKERS + nomeArquivo);
         boolean pathValido = path.mkdirs();
 
         if (pathValido) {
@@ -134,7 +132,7 @@ public class GeradorDeFiguras {
                 InputStream inputStream = new URL(conteudos.get(i).getUrlImagem())
                     .openStream();
 
-                String nomeArquivo = "saida/stickers/" + conteudos.get(i).getTitulo() + ".png";
+                String nomeArquivo = DIR_STICKERS + conteudos.get(i).getTitulo() + ".png";
                 tituloTexto = conteudos.get(i).getTitulo();
 
                 this.criar(inputStream, nomeArquivo, tituloTexto);
