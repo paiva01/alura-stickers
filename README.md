@@ -14,7 +14,7 @@ Extrair dados do JSON obtido e mostrá-los formatados (cores, emojis, etc) no co
 
 - `Funcionalidade 2`: `Gerar figurinhas para o WhatsApp, e outros`:
 
-Gera imagens personalizadas em formato PNG através do pôster dos Top Filmes do IMDB. E também gera um texto sobre a imagem do pôster baseado na nota do filme.
+Gera imagens personalizadas em formato PNG através do pôster dos Top Filmes do IMDB. E também gera um texto sobre a imagem do pôster baseado na nota do filme. Também baixa a imagem astronômica do dia através da API da Nasa, colocando o nome do astro na imagem.
 ![Funcionalidade 2](docs/images/gifs/java-console-figs.gif)
 
 ## ✔️ Tecnologias utilizadas
