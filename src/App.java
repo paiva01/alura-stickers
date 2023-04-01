@@ -1,5 +1,3 @@
-import java.awt.FontFormatException;
-import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -11,7 +9,7 @@ public class App {
     static final String VERDE = "\u001b[42m";
     static final String VERMELHO = "\u001b[41m";
 
-    public static void main(String[] args) throws IOException, InterruptedException, FontFormatException {
+    public static void main(String[] args) throws Exception {
         Scanner scanner = new Scanner(System.in);
 
         mostrarMenu();
@@ -51,7 +49,7 @@ public class App {
         }
     }
 
-    private static void manipularDados(int opcao) throws IOException, InterruptedException {
+    private static void manipularDados(int opcao) throws Exception {
         switch (opcao) {
             case 1:
                 System.out.println(MAGENTA + "\n-- TOP FILMES -----------\n" + FORMAT_RESET);
@@ -154,6 +152,24 @@ public class App {
 
                 System.out.println(VERDE + "Imagem salva com sucesso!" + FORMAT_RESET);
                 break;
+            case 8:
+                System.out.println(AZUL + "\nGerando figurinhas imagem ...\n" + FORMAT_RESET);
+
+                api = API.LANGS_API;
+                url = api.getUrl();
+                extrator = api.getExtrator();
+
+                http = new ClienteHttp();
+                json = http.consumir(url);
+
+                conteudos = extrator.extrairDados(json);
+
+                gerador = new GeradorDeFiguras();
+
+                gerador.gerarFiguras(conteudos, extrator);
+
+                System.out.println(VERDE + "Figurinhas salvas com sucesso!" + FORMAT_RESET);
+                break;
             case 0:
                 System.out.println(VERMELHO + "\nEncerrando..." + FORMAT_RESET);
                 Thread.sleep(2000);
@@ -179,7 +195,9 @@ public class App {
                 5. Gerar figurinhas dos Top Filmes.
                                 ---
                 6. Imagens Astronômicas da Semana.
-                7. Salvar imagem Astronômica do dia
+                7. Salvar imagem Astronômica do dia.
+                                ---
+                8. Gerar figurinhas de linguagens.
                 ------------------------------------------
                 0. Para encerrar o programa.
                 ------------------------------------------

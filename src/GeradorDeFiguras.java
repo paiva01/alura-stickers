@@ -15,6 +15,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.InputMismatchException;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -22,6 +23,7 @@ import javax.imageio.ImageIO;
 public class GeradorDeFiguras {
     
     private static final String DIR_STICKERS = "saida/stickers/";
+    private static final String DIR_SOBREPOSICAO = "sobreposicao/";
 
     private void criar(InputStream inputStream,
         String nomeArquivo, String textoSticker, InputStream inputStreamSobreposicao) throws IOException {
@@ -92,7 +94,7 @@ public class GeradorDeFiguras {
         inputStream.close(); 
     }
 
-    public void gerarFiguras(List<Conteudo> conteudos, ExtratorDeConteudo extrator) throws IOException {
+    public void gerarFiguras(List<Conteudo> conteudos, ExtratorDeConteudo extrator) throws Exception {
 
         if (extrator instanceof ExtratorDeConteudoImdb) {
             for (Conteudo conteudo : conteudos) {
@@ -100,46 +102,72 @@ public class GeradorDeFiguras {
                 String urlImagemHD = urlImagem.replaceFirst("(@?\\.)([0-9A-Z,_]+).jpg$", "$1.jpg");
     
                 String titulo = conteudo.getTitulo();
-                String textoCustom;
-                InputStream imgDean;
-    
+                String textoCustom  = "";
+                
                 double nota = Double.parseDouble(conteudo.getNota());
-    
-                if (nota > 8) {
-                    textoCustom = "FINO SENHORES";
-                    imgDean = new FileInputStream(new File("sobreposicao/dean-contente.png"));
-                } else if (nota >= 6.5 && nota <= 8) {
-                    textoCustom = "BRABO";
-                    imgDean = new FileInputStream(new File("sobreposicao/dean-contente.png"));
-                } else {
-                    textoCustom = "HMMMMM";
-                    imgDean = new FileInputStream(new File("sobreposicao/dean-nao-contente.png"));
+                
+                InputStream imgDean = null;
+                
+                try {
+                    if (nota > 8) {
+                        textoCustom = "FINO SENHORES";
+                        imgDean = new FileInputStream(new File(DIR_SOBREPOSICAO + "dean-contente.png"));
+                    } else if (nota >= 6.5 && nota <= 8) {
+                        textoCustom = "BRABO";
+                        imgDean = new FileInputStream(new File(DIR_SOBREPOSICAO + "dean-contente.png"));
+                    } else {
+                        textoCustom = "HMMMMM";
+                        imgDean = new FileInputStream(new File(DIR_SOBREPOSICAO + "dean-nao-contente.png"));
+                    }
+
+                    try (InputStream inputStream = new URL(urlImagemHD).openStream()) {
+                        String nomeArquivo = titulo.replace(": ", " - ") + ".png";
+
+                        this.criar(inputStream, nomeArquivo, textoCustom, imgDean);
+
+                        System.out.println("Gerando figurinha de " + titulo);
+                        System.out.println();
+                    }
+                    
+                } catch (Exception e) {
+                    throw new InputMismatchException(e.getMessage());
+                } finally {
+                    if (imgDean != null) imgDean.close();
                 }
-    
-                InputStream inputStream = new URL(urlImagemHD).openStream();
-                String nomeArquivo = titulo.replace(": ", " – ") + ".png";
-    
-                this.criar(inputStream, nomeArquivo, textoCustom, imgDean);
-    
-                System.out.println("Gerando figurinha de " + titulo);
-                System.out.println();
+
             }
 
         } else if (extrator instanceof ExtratorDeConteudoNasa) {
             String tituloTexto;
 
             for (int i = 0; i < conteudos.size(); i++) {
-                InputStream inputStream = new URL(conteudos.get(i).getUrlImagem())
-                    .openStream();
+                try (InputStream inputStream = new URL(conteudos.get(i).getUrlImagem())
+                    .openStream()) {
 
-                String nomeArquivo = DIR_STICKERS + conteudos.get(i).getTitulo() + ".png";
-                tituloTexto = conteudos.get(i).getTitulo();
+                    String nomeArquivo = DIR_STICKERS + conteudos.get(i).getTitulo() + ".png";
+                    tituloTexto = conteudos.get(i).getTitulo();
 
-                this.criar(inputStream, nomeArquivo, tituloTexto);
+                    this.criar(inputStream, nomeArquivo, tituloTexto);
 
-                System.out.println();
+                    System.out.println();
+                }
+            }
+        } else if (extrator instanceof ExtratorDeConteudoLangs) {
+            for (int i = 0; i < conteudos.size(); i++) {
+                try (InputStream inputStream = new URL(conteudos.get(i).getUrlImagem())
+                    .openStream()) {
+
+                    String nomeArquivo = DIR_STICKERS + conteudos.get(i).getTitulo() + ".png";
+
+                    String tituloTexto = "TOPZERA";
+
+                    this.criar(inputStream, nomeArquivo, tituloTexto);
+
+                    System.out.println();
+                }
             }
         }
+
     }
 
     private void criar(InputStream inputStream, String nomeArquivo, String tituloTexto) throws IOException {
@@ -159,7 +187,7 @@ public class GeradorDeFiguras {
 
         graphics.drawString(tituloTexto, 100, novaAltura - 100);
         
-        File path = new File("saida/stickers/" + nomeArquivo);
+        File path = new File(DIR_STICKERS + nomeArquivo);
         boolean pathValido = path.mkdirs();
 
         if (pathValido) {
