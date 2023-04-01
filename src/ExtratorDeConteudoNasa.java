@@ -9,7 +9,7 @@ public class ExtratorDeConteudoNasa implements ExtratorDeConteudo {
         
         // popular a lista de conteudos
         return listaDeAtributos.stream()
-            .map(atributos -> new Conteudo(atributos.get("title"), atributos.get("url")))
+            .map(atributos -> new Conteudo(atributos.get("title").replace(":", " -"), atributos.get("url")))
             .toList();
 
     }
