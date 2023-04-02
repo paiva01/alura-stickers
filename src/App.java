@@ -1,3 +1,4 @@
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -13,17 +14,14 @@ public class App {
         Scanner scanner = new Scanner(System.in);
 
         mostrarMenu();
-
-        var opcao = scanner.nextInt();
+        manipularDados(scanner);
+        
         scanner.close();
-
-        manipularDados(opcao);
-
     }
 
     private static void exibirDados(String json, ExtratorDeConteudo extrator) {
         List<Conteudo> conteudos = extrator.extrairDados(json);
-        
+
         for (Conteudo conteudo : conteudos) {
 
             if (extrator instanceof ExtratorDeConteudoImdb) {
@@ -41,15 +39,24 @@ public class App {
                     System.out.println();
                 }
             } else if (extrator instanceof ExtratorDeConteudoNasa) {
-                System.out.println("Título: "+ conteudo.getTitulo());
-                System.out.println("Imagem: "+ conteudo.getUrlImagem());
+                System.out.println("Título: " + conteudo.getTitulo());
+                System.out.println("Imagem: " + conteudo.getUrlImagem());
                 System.out.println();
             }
 
         }
     }
 
-    private static void manipularDados(int opcao) throws Exception {
+    private static void manipularDados(Scanner scanner) throws Exception {
+        
+        int opcao;
+
+        try {
+           opcao = scanner.nextInt();
+        } catch (InputMismatchException e) {
+            throw new InputMismatchException("Dado inválido! Digite apenas números!");
+        }
+
         switch (opcao) {
             case 1:
                 System.out.println(MAGENTA + "\n-- TOP FILMES -----------\n" + FORMAT_RESET);
@@ -61,11 +68,11 @@ public class App {
                 String json = http.consumir(url);
 
                 exibirDados(json, extrator);
-                
+
                 break;
             case 2:
                 System.out.println(MAGENTA + "\n-- FILMES POPULARES -----------\n" + FORMAT_RESET);
-                
+
                 api = API.IMDB_POP_MOVIES;
                 url = api.getUrl();
                 extrator = api.getExtrator();
@@ -78,7 +85,7 @@ public class App {
                 break;
             case 3:
                 System.out.println(MAGENTA + "\n-- TOP SÉRIES -----------\n" + FORMAT_RESET);
-                
+
                 api = API.IMDB_TOP_SERIES;
                 url = api.getUrl();
                 extrator = api.getExtrator();
@@ -87,11 +94,11 @@ public class App {
                 json = http.consumir(url);
 
                 exibirDados(json, extrator);
-                
+
                 break;
             case 4:
                 System.out.println(MAGENTA + "\n-- SÉRIES POPULARES -----------\n" + FORMAT_RESET);
-                
+
                 api = API.IMDB_POP_SERIES;
                 url = api.getUrl();
                 extrator = api.getExtrator();
@@ -104,7 +111,7 @@ public class App {
                 break;
             case 5:
                 System.out.println(AZUL + "\nGerando figurinhas ...\n" + FORMAT_RESET);
-                
+
                 api = API.IMDB_TOP_MOVIES;
                 url = api.getUrl();
                 extrator = api.getExtrator();
@@ -123,7 +130,7 @@ public class App {
                 break;
             case 6:
                 System.out.println(AZUL + "\n-- Imagens da Semana -----\n" + FORMAT_RESET);
-                
+
                 api = API.NASA;
                 url = api.getUrl();
                 extrator = api.getExtrator();
@@ -169,16 +176,24 @@ public class App {
                 gerador.gerarFiguras(conteudos, extrator);
 
                 System.out.println(VERDE + "Figurinhas salvas com sucesso!" + FORMAT_RESET);
+                
                 break;
             case 0:
                 System.out.println(VERMELHO + "\nEncerrando..." + FORMAT_RESET);
                 Thread.sleep(2000);
                 System.out.println(AZUL + "\nPrograma finalizado." + FORMAT_RESET);
-                
+
                 System.exit(0);
-                
-                break;       
+
+                break;
             default:
+                System.err.println("\nERRO! Opção inválida, leia e tente novamente.\n");
+                
+                Thread.sleep(2500);
+                
+                mostrarMenu();
+                manipularDados(scanner);
+
                 break;
         }
 
@@ -197,7 +212,7 @@ public class App {
                 6. Imagens Astronômicas da Semana.
                 7. Salvar imagem Astronômica do dia.
                                 ---
-                8. Gerar figurinhas de linguagens.
+                8. Gerar figurinhas das linguagens.
                 ------------------------------------------
                 0. Para encerrar o programa.
                 ------------------------------------------
