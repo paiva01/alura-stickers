@@ -60,70 +60,37 @@ public class App {
         switch (opcao) {
             case 1:
                 System.out.println(MAGENTA + "\n-- TOP FILMES -----------\n" + FORMAT_RESET);
+                
                 var api = API.IMDB_TOP_MOVIES;
-                String url = api.getUrl();
-                ExtratorDeConteudo extrator = api.getExtrator();
-
-                var http = new ClienteHttp();
-                String json = http.consumir(url);
-
-                exibirDados(json, extrator);
+                consumir(api);
 
                 break;
             case 2:
                 System.out.println(MAGENTA + "\n-- FILMES POPULARES -----------\n" + FORMAT_RESET);
 
                 api = API.IMDB_POP_MOVIES;
-                url = api.getUrl();
-                extrator = api.getExtrator();
-
-                http = new ClienteHttp();
-                json = http.consumir(url);
-
-                exibirDados(json, extrator);
+                consumir(api);
 
                 break;
             case 3:
                 System.out.println(MAGENTA + "\n-- TOP SÉRIES -----------\n" + FORMAT_RESET);
 
                 api = API.IMDB_TOP_SERIES;
-                url = api.getUrl();
-                extrator = api.getExtrator();
-
-                http = new ClienteHttp();
-                json = http.consumir(url);
-
-                exibirDados(json, extrator);
+                consumir(api);
 
                 break;
             case 4:
                 System.out.println(MAGENTA + "\n-- SÉRIES POPULARES -----------\n" + FORMAT_RESET);
 
                 api = API.IMDB_POP_SERIES;
-                url = api.getUrl();
-                extrator = api.getExtrator();
-
-                http = new ClienteHttp();
-                json = http.consumir(url);
-
-                exibirDados(json, extrator);
+                consumir(api);
 
                 break;
             case 5:
                 System.out.println(AZUL + "\nGerando figurinhas ...\n" + FORMAT_RESET);
 
                 api = API.IMDB_TOP_MOVIES;
-                url = api.getUrl();
-                extrator = api.getExtrator();
-
-                http = new ClienteHttp();
-                json = http.consumir(url);
-
-                List<Conteudo> conteudos = extrator.extrairDados(json);
-
-                var gerador = new GeradorDeFiguras();
-
-                gerador.gerarFiguras(conteudos, extrator);
+                consumir2(api);
 
                 System.out.println(VERDE + "Figurinhas criadas com sucesso!" + FORMAT_RESET);
 
@@ -132,30 +99,14 @@ public class App {
                 System.out.println(AZUL + "\n-- Imagens da Semana -----\n" + FORMAT_RESET);
 
                 api = API.NASA;
-                url = api.getUrl();
-                extrator = api.getExtrator();
-
-                http = new ClienteHttp();
-                json = http.consumir(url);
-
-                exibirDados(json, extrator);
+                consumir(api);
 
                 break;
             case 7:
                 System.out.println(AZUL + "\nSalvando imagem ...\n" + FORMAT_RESET);
 
                 api = API.NASA;
-                url = api.getUrl();
-                extrator = api.getExtrator();
-
-                http = new ClienteHttp();
-                json = http.consumir(url);
-
-                conteudos = extrator.extrairDados(json);
-
-                gerador = new GeradorDeFiguras();
-
-                gerador.gerarFiguras(conteudos, extrator);
+                consumir2(api);
 
                 System.out.println(VERDE + "Imagem salva com sucesso!" + FORMAT_RESET);
                 break;
@@ -163,17 +114,7 @@ public class App {
                 System.out.println(AZUL + "\nGerando figurinhas imagem ...\n" + FORMAT_RESET);
 
                 api = API.LANGS_API;
-                url = api.getUrl();
-                extrator = api.getExtrator();
-
-                http = new ClienteHttp();
-                json = http.consumir(url);
-
-                conteudos = extrator.extrairDados(json);
-
-                gerador = new GeradorDeFiguras();
-
-                gerador.gerarFiguras(conteudos, extrator);
+                consumir2(api);
 
                 System.out.println(VERDE + "Figurinhas salvas com sucesso!" + FORMAT_RESET);
                 
@@ -199,6 +140,30 @@ public class App {
 
     }
 
+    private static void consumir(API api) {
+        String url = api.getUrl();
+        ExtratorDeConteudo extrator = api.getExtrator();
+
+        var http = new ClienteHttp();
+        String json = http.consumir(url);
+
+        exibirDados(json, extrator);
+    }
+
+    private static void consumir2(API api) throws Exception {
+        String url = api.getUrl();
+        ExtratorDeConteudo extrator = api.getExtrator();
+
+        var http = new ClienteHttp();
+        String json = http.consumir(url);
+
+        List<Conteudo> lista = extrator.extrairDados(json);
+
+        var gerador = new GeradorDeFiguras();
+
+        gerador.gerarFiguras(lista, extrator);
+    }
+    
     private static void mostrarMenu() {
         System.out.print("""
                                 [ MENU ]
