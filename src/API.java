@@ -11,7 +11,7 @@ public enum API {
     new ExtratorDeConteudoImdb()),
     IMDB_POP_SERIES("https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/MostPopularTVs.json",
     new ExtratorDeConteudoImdb()),
-    NASA("https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&start_date=" + obterDataAtual() + "&end_date=" + obterDataAtual(),
+    NASA_DAY_IMAGE("https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&start_date=" + obterDataAtual() + "&end_date=" + obterDataAtual(),
     new ExtratorDeConteudoNasa()),
     LANGS_API("http://localhost:8080/langs",
     new ExtratorDeConteudoLangs());
@@ -35,4 +35,5 @@ public enum API {
     private static String obterDataAtual () {
         return LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
+
 }

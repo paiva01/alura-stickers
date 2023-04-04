@@ -12,7 +12,7 @@ public class App {
 
     public static void main(String[] args) throws Exception {
         Scanner scanner = new Scanner(System.in);
-
+        
         mostrarMenu();
         manipularDados(scanner);
         
@@ -98,14 +98,14 @@ public class App {
             case 6:
                 System.out.println(AZUL + "\n-- Imagens da Semana -----\n" + FORMAT_RESET);
 
-                api = API.NASA;
+                api = API.NASA_DAY_IMAGE;
                 consumir(api);
 
                 break;
             case 7:
                 System.out.println(AZUL + "\nSalvando imagem ...\n" + FORMAT_RESET);
 
-                api = API.NASA;
+                api = API.NASA_DAY_IMAGE;
                 consumir2(api);
 
                 System.out.println(VERDE + "Imagem salva com sucesso!" + FORMAT_RESET);
