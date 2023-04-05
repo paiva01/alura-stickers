@@ -98,7 +98,7 @@ public class App {
             case 6:
                 System.out.println(AZUL + "\n-- Imagens da Semana -----\n" + FORMAT_RESET);
 
-                api = API.NASA_DAY_IMAGE;
+                api = API.NASA_WEEK_IMAGEs;
                 consumir(api);
 
                 break;
